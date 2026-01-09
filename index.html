@@ -1543,12 +1543,36 @@
         }
     </script>
 
-   
+    <!-- 
+    SERVICE WORKER INSTRUCTIONS:
+    For full offline capability, save the following code as 'sw.js' in the same directory:
+    
+    const CACHE_NAME = 'optibase-v1';
+    const urlsToCache = [
+      './',
+      './index.html'
+    ];
+
+    self.addEventListener('install', (event) => {
+      event.waitUntil(
+        caches.open(CACHE_NAME)
+          .then((cache) => cache.addAll(urlsToCache))
+      );
+    });
+
+    self.addEventListener('fetch', (event) => {
+      event.respondWith(
+        caches.match(event.request)
+          .then((response) => response || fetch(event.request))
+      );
+    });
+    
+    And add this script tag after the existing script:
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js');
       }
     </script>
-    
+    -->
 </body>
 </html>
