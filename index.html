@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Convert images to base64 with quality compression - a privacy-friendly, offline-capable PWA">
+    <meta name="description" content="Convert images to base64 with quality compression and encryption - a privacy-friendly, offline-capable PWA">
     <meta name="theme-color" content="#3b82f6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="OptiBase">
-    <title>OptiBase - Image to Base64 Converter</title>
+    <title>OptiBase - Image to Base64 Converter with Encryption</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiT3B0aUJhc2UiLCJzaG9ydF9uYW1lIjoiT3B0aUJhc2UiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmOGZhZmMiLCJ0aGVtZV9jb2xvciI6IiMzYjgyZjYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGltYWdlX3htbCIsInN0eWxlcyI6W3sicmVzb2x1dGlvbiI6IjE5MngxOTAiLCJzaXplIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifV0sInB1cnBvc2UiOiJzY3JlZW5fYXBwbGljYXRpb25fZXh0cmFfZ2lzdHJvIn1dLCJzY29wZXMiOiIuLyIsImxvbmciOiJodHRwczovL2xvY2FsaG9zdDo0NDM3L2xvbmcifQ==">
@@ -20,6 +20,8 @@
             --primary-light: #dbeafe;
             --success: #10b981;
             --error: #ef4444;
+            --encryption: #8b5cf6;
+            --encryption-light: #ede9fe;
             --bg-primary: #f8fafc;
             --bg-secondary: #ffffff;
             --bg-tertiary: #f1f5f9;
@@ -41,6 +43,7 @@
             --border: #334155;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
             --primary-light: #1e3a5f;
+            --encryption-light: #2e1065;
         }
 
         * {
@@ -281,6 +284,15 @@
             background: var(--primary-hover);
         }
 
+        .btn-encryption {
+            background: var(--encryption);
+            color: white;
+        }
+
+        .btn-encryption:hover {
+            background: #7c3aed;
+        }
+
         .btn-secondary {
             background: var(--bg-tertiary);
             color: var(--text-primary);
@@ -295,6 +307,143 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+        }
+
+        /* Encryption Section */
+        .encryption-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--encryption);
+            display: none;
+        }
+
+        .encryption-section.visible {
+            display: block;
+        }
+
+        .encryption-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .encryption-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--encryption);
+        }
+
+        .encryption-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .encryption-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .key-input-wrapper {
+            position: relative;
+        }
+
+        .key-input-wrapper label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .key-input-container {
+            position: relative;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 12px 44px 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: monospace;
+            transition: border-color 0.2s ease;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: var(--encryption);
+        }
+
+        .key-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        .key-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .mode-btn.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
+        }
+
+        .mode-btn svg {
+            width: 16px;
+            height: 16px;
         }
 
         /* Comparison Grid */
@@ -343,6 +492,11 @@
         .image-card-badge.success {
             background: #d1fae5;
             color: var(--success);
+        }
+
+        .image-card-badge.encrypted {
+            background: var(--encryption-light);
+            color: var(--encryption);
         }
 
         .image-preview {
@@ -414,6 +568,23 @@
             color: var(--text-primary);
         }
 
+        .output-status {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .output-status.plain {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .output-status.encrypted {
+            background: var(--encryption-light);
+            color: var(--encryption);
+        }
+
         .base64-output {
             width: 100%;
             min-height: 120px;
@@ -427,11 +598,16 @@
             resize: vertical;
             word-break: break-all;
             line-height: 1.5;
+            transition: border-color 0.3s ease;
         }
 
         .base64-output:focus {
             outline: none;
             border-color: var(--primary);
+        }
+
+        .base64-output.encrypted {
+            border-color: var(--encryption);
         }
 
         .output-actions {
@@ -470,6 +646,10 @@
             width: 20px;
             height: 20px;
             color: var(--success);
+        }
+
+        .toast.error svg {
+            color: var(--error);
         }
 
         /* Install Prompt */
@@ -556,6 +736,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .encryption-controls {
+                grid-template-columns: 1fr;
+            }
+
             .image-card-header {
                 flex-direction: column;
                 gap: 10px;
@@ -596,6 +780,24 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Encryption indicator */
+        .encryption-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--encryption);
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: var(--encryption-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .encryption-indicator svg {
+            width: 16px;
+            height: 16px;
         }
     </style>
 </head>
@@ -676,6 +878,53 @@
             </div>
         </div>
 
+        <!-- Encryption Section -->
+        <div class="encryption-section" id="encryptionSection">
+            <div class="encryption-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span class="encryption-title">Encryption</span>
+            </div>
+            <div class="encryption-controls">
+                <div class="key-input-wrapper">
+                    <label>Secret Key</label>
+                    <div class="key-input-container">
+                        <input type="password" class="key-input" id="secretKey" placeholder="Enter encryption key...">
+                        <button class="key-toggle" id="keyToggle" title="Show/hide key">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="keyIcon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Mode</label>
+                    <div class="mode-toggle">
+                        <button class="mode-btn active" id="encryptModeBtn" data-mode="encrypt">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Encrypt
+                        </button>
+                        <button class="mode-btn" id="decryptModeBtn" data-mode="decrypt">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                            Decrypt
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="encryption-indicator" id="encryptionIndicator" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span id="encryptionStatus">Content is encrypted</span>
+            </div>
+        </div>
+
         <!-- Comparison -->
         <div class="comparison" id="comparison">
             <!-- Original Image -->
@@ -702,8 +951,8 @@
             <!-- Compressed Image -->
             <div class="image-card">
                 <div class="image-card-header">
-                    <span class="image-card-title">Compressed</span>
-                    <span class="image-card-badge success" id="compressedBadge">Compressed</span>
+                    <span class="image-card-title">Output</span>
+                    <span class="image-card-badge success" id="outputBadge">Compressed</span>
                 </div>
                 <div class="image-preview" style="position: relative;">
                     <img id="compressedImage" src="" alt="Compressed image">
@@ -727,7 +976,8 @@
         <!-- Base64 Output -->
         <div class="output-section" id="outputSection">
             <div class="output-header">
-                <span class="output-title">Base64 String</span>
+                <span class="output-title">Output String</span>
+                <span class="output-status plain" id="outputStatus">Plain Base64</span>
             </div>
             <textarea class="base64-output" id="base64Output" readonly placeholder="Base64 string will appear here..."></textarea>
             <div class="output-actions">
@@ -735,7 +985,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    Copy Base64
+                    <span id="copyBtnText">Copy Base64</span>
                 </button>
                 <button class="btn btn-secondary" id="downloadBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -754,7 +1004,7 @@
                 </svg>
                 Works Offline - All processing happens locally
             </div>
-            <p style="margin-top: 10px;">Privacy-friendly image conversion. No data leaves your device.</p>
+            <p style="margin-top: 10px;">Privacy-friendly image conversion with optional encryption. No data leaves your device.</p>
         </footer>
     </div>
 
@@ -771,6 +1021,7 @@
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('fileInput');
         const controls = document.getElementById('controls');
+        const encryptionSection = document.getElementById('encryptionSection');
         const comparison = document.getElementById('comparison');
         const outputSection = document.getElementById('outputSection');
         const qualitySlider = document.getElementById('qualitySlider');
@@ -787,17 +1038,167 @@
         const toast = document.getElementById('toast');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const installPrompt = document.getElementById('installPrompt');
+        const secretKeyInput = document.getElementById('secretKey');
+        const keyToggle = document.getElementById('keyToggle');
+        const encryptModeBtn = document.getElementById('encryptModeBtn');
+        const decryptModeBtn = document.getElementById('decryptModeBtn');
+        const outputStatus = document.getElementById('outputStatus');
+        const encryptionIndicator = document.getElementById('encryptionIndicator');
+        const encryptionStatus = document.getElementById('encryptionStatus');
+        const copyBtnText = document.getElementById('copyBtnText');
+        const outputBadge = document.getElementById('outputBadge');
 
         // State
         let currentFile = null;
         let currentBase64 = '';
+        let rawBase64 = '';
         let deferredPrompt = null;
+        let encryptionMode = 'encrypt';
+        let isKeyVisible = false;
+        let debounceTimer = null;
+
+        // Vigenère Cipher - Uses ASCII printable characters (32-126)
+        const CHAR_START = 32;
+        const CHAR_END = 126;
+        const ALPHABET_SIZE = CHAR_END - CHAR_START + 1;
+
+        /**
+         * Vigenère cipher encryption
+         * Operates on ASCII printable characters (32-126)
+         */
+        function vigenereEncrypt(text, key) {
+            if (!key || !text) return text;
+            
+            let result = '';
+            const normalizedKey = normalizeKey(key);
+            
+            for (let i = 0; i < text.length; i++) {
+                const charCode = text.charCodeAt(i);
+                
+                // Only encrypt printable ASCII characters
+                if (charCode >= CHAR_START && charCode <= CHAR_END) {
+                    const textIndex = charCode - CHAR_START;
+                    const keyIndex = normalizedKey.charCodeAt(i % normalizedKey.length) - CHAR_START;
+                    const encryptedIndex = (textIndex + keyIndex) % ALPHABET_SIZE;
+                    result += String.fromCharCode(encryptedIndex + CHAR_START);
+                } else {
+                    // Pass through non-printable characters
+                    result += text[i];
+                }
+            }
+            
+            return result;
+        }
+
+        /**
+         * Vigenère cipher decryption
+         */
+        function vigenereDecrypt(text, key) {
+            if (!key || !text) return text;
+            
+            let result = '';
+            const normalizedKey = normalizeKey(key);
+            
+            for (let i = 0; i < text.length; i++) {
+                const charCode = text.charCodeAt(i);
+                
+                // Only decrypt printable ASCII characters
+                if (charCode >= CHAR_START && charCode <= CHAR_END) {
+                    const textIndex = charCode - CHAR_START;
+                    const keyIndex = normalizedKey.charCodeAt(i % normalizedKey.length) - CHAR_START;
+                    const decryptedIndex = (textIndex - keyIndex + ALPHABET_SIZE) % ALPHABET_SIZE;
+                    result += String.fromCharCode(decryptedIndex + CHAR_START);
+                } else {
+                    // Pass through non-printable characters
+                    result += text[i];
+                }
+            }
+            
+            return result;
+        }
+
+        /**
+         * Normalize key to use only printable ASCII characters
+         */
+        function normalizeKey(key) {
+            return key.split('').filter(char => {
+                const code = char.charCodeAt(0);
+                return code >= CHAR_START && code <= CHAR_END;
+            }).join('') || 'KEY';
+        }
+
+        /**
+         * Apply encryption or decryption based on mode
+         */
+        function applyEncryption() {
+            const key = secretKeyInput.value;
+            
+            if (!key && encryptionMode === 'encrypt') {
+                // No key, show raw base64
+                base64Output.value = rawBase64;
+                updateEncryptionUI(false);
+                return;
+            }
+            
+            if (encryptionMode === 'encrypt') {
+                // Encrypt
+                const encrypted = vigenereEncrypt(rawBase64, key);
+                base64Output.value = encrypted;
+                updateEncryptionUI(true);
+            } else {
+                // Decrypt
+                const input = base64Output.value;
+                const decrypted = vigenereDecrypt(input, key);
+                
+                // Try to update image preview with decrypted base64
+                try {
+                    compressedImage.src = decrypted;
+                    updateEncryptionUI(false, true);
+                } catch (e) {
+                    showToast('Decryption failed - invalid key or data', true);
+                }
+            }
+        }
+
+        /**
+         * Update UI to reflect encryption state
+         */
+        function updateEncryptionUI(isEncrypted, isDecryptMode = false) {
+            if (isEncrypted) {
+                outputStatus.textContent = 'Encrypted';
+                outputStatus.className = 'output-status encrypted';
+                base64Output.classList.add('encrypted');
+                encryptionIndicator.style.display = 'flex';
+                encryptionStatus.textContent = 'Content is encrypted with your key';
+                copyBtnText.textContent = 'Copy Encrypted';
+                outputBadge.textContent = 'Encrypted';
+                outputBadge.className = 'image-card-badge encrypted';
+            } else if (isDecryptMode) {
+                outputStatus.textContent = 'Decrypted';
+                outputStatus.className = 'output-status plain';
+                base64Output.classList.remove('encrypted');
+                encryptionIndicator.style.display = 'flex';
+                encryptionStatus.textContent = 'Content decrypted successfully';
+                copyBtnText.textContent = 'Copy Base64';
+                outputBadge.textContent = 'Decrypted';
+                outputBadge.className = 'image-card-badge success';
+            } else {
+                outputStatus.textContent = 'Plain Base64';
+                outputStatus.className = 'output-status plain';
+                base64Output.classList.remove('encrypted');
+                encryptionIndicator.style.display = 'none';
+                copyBtnText.textContent = 'Copy Base64';
+                outputBadge.textContent = 'Compressed';
+                outputBadge.className = 'image-card-badge success';
+            }
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
             initDropzone();
             initControls();
+            initEncryptionControls();
             initInstallPrompt();
             initServiceWorker();
         });
@@ -830,17 +1231,14 @@
 
         // Dropzone
         function initDropzone() {
-            // Click to browse
             dropzone.addEventListener('click', () => fileInput.click());
 
-            // File input change
             fileInput.addEventListener('change', (e) => {
                 if (e.target.files.length > 0) {
                     handleFile(e.target.files[0]);
                 }
             });
 
-            // Drag and drop
             dropzone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropzone.classList.add('dragover');
@@ -870,23 +1268,20 @@
 
             currentFile = file;
             
-            // Create object URL for original
             const objectUrl = URL.createObjectURL(file);
             originalImage.src = objectUrl;
 
             originalImage.onload = () => {
-                // Update original stats
                 document.getElementById('originalDimensions').textContent = 
                     `${originalImage.naturalWidth} × ${originalImage.naturalHeight}`;
                 document.getElementById('originalSize').textContent = formatFileSize(file.size);
                 
-                // Show UI elements
                 controls.classList.add('visible');
+                encryptionSection.classList.add('visible');
                 comparison.classList.add('visible');
                 outputSection.classList.add('visible');
                 dropzone.style.display = 'none';
 
-                // Process image
                 processImage();
             };
         }
@@ -910,8 +1305,66 @@
                 fileInput.value = '';
                 dropzone.click();
             });
-            copyBtn.addEventListener('click', copyBase64);
+            copyBtn.addEventListener('click', copyOutput);
             downloadBtn.addEventListener('click', downloadImage);
+        }
+
+        // Encryption Controls
+        function initEncryptionControls() {
+            // Key visibility toggle
+            keyToggle.addEventListener('click', () => {
+                isKeyVisible = !isKeyVisible;
+                secretKeyInput.type = isKeyVisible ? 'text' : 'password';
+                document.getElementById('keyIcon').innerHTML = isKeyVisible 
+                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />'
+                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+            });
+
+            // Mode toggle
+            encryptModeBtn.addEventListener('click', () => setEncryptionMode('encrypt'));
+            decryptModeBtn.addEventListener('click', () => setEncryptionMode('decrypt'));
+
+            // Key input with debounce
+            secretKeyInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    applyEncryption();
+                }, 300);
+            });
+
+            // Also update when textarea is edited (for decryption)
+            base64Output.addEventListener('input', () => {
+                if (encryptionMode === 'decrypt') {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        applyEncryption();
+                    }, 300);
+                }
+            });
+        }
+
+        function setEncryptionMode(mode) {
+            encryptionMode = mode;
+            
+            if (mode === 'encrypt') {
+                encryptModeBtn.classList.add('active');
+                decryptModeBtn.classList.remove('active');
+                base64Output.readOnly = true;
+                
+                // Restore raw base64 and encrypt it
+                if (rawBase64) {
+                    applyEncryption();
+                }
+            } else {
+                decryptModeBtn.classList.add('active');
+                encryptModeBtn.classList.remove('active');
+                base64Output.readOnly = false;
+                base64Output.placeholder = 'Paste encrypted string here to decrypt...';
+                
+                // Clear and wait for user input
+                base64Output.value = '';
+                updateEncryptionUI(false, true);
+            }
         }
 
         // Image Processing
@@ -924,43 +1377,41 @@
                 const quality = qualitySlider.value / 100;
                 const format = formatSelect.value;
                 
-                // Create canvas
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                // Set dimensions
                 canvas.width = originalImage.naturalWidth;
                 canvas.height = originalImage.naturalHeight;
 
-                // Handle transparency for JPEG
                 if (format === 'image/jpeg') {
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                 }
 
-                // Draw image
                 ctx.drawImage(originalImage, 0, 0);
 
-                // Convert to base64
-                currentBase64 = canvas.toDataURL(format, quality);
+                rawBase64 = canvas.toDataURL(format, quality);
+                currentBase64 = rawBase64;
                 
-                // Update compressed image
                 compressedImage.src = currentBase64;
 
                 compressedImage.onload = () => {
-                    // Calculate sizes
                     const base64Size = Math.round((currentBase64.length - `data:${format};base64,`.length) * 0.75);
                     const originalSize = currentFile.size;
                     const compressionRatio = ((1 - base64Size / originalSize) * 100).toFixed(1);
 
-                    // Update compressed stats
                     document.getElementById('compressedDimensions').textContent = 
                         `${compressedImage.naturalWidth} × ${compressedImage.naturalHeight}`;
                     document.getElementById('compressedSize').textContent = 
                         `${formatFileSize(base64Size)} (${compressionRatio}% smaller)`;
 
-                    // Update base64 output
-                    base64Output.value = currentBase64;
+                    // Apply encryption if key is set
+                    if (secretKeyInput.value && encryptionMode === 'encrypt') {
+                        applyEncryption();
+                    } else {
+                        base64Output.value = currentBase64;
+                        updateEncryptionUI(false);
+                    }
 
                     loadingOverlay.classList.remove('visible');
                 };
@@ -979,27 +1430,27 @@
             return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
         }
 
-        async function copyBase64() {
-            if (!currentBase64) return;
+        async function copyOutput() {
+            const text = base64Output.value;
+            if (!text) return;
 
             try {
-                await navigator.clipboard.writeText(currentBase64);
-                showToast('Base64 copied to clipboard!');
+                await navigator.clipboard.writeText(text);
+                showToast(encryptionMode === 'encrypt' ? 'Encrypted string copied!' : 'Base64 copied to clipboard!');
             } catch (error) {
-                // Fallback
                 base64Output.select();
                 document.execCommand('copy');
-                showToast('Base64 copied to clipboard!');
+                showToast(encryptionMode === 'encrypt' ? 'Encrypted string copied!' : 'Base64 copied to clipboard!');
             }
         }
 
         function downloadImage() {
-            if (!currentBase64) return;
+            // In encrypt mode, download the raw image, not the encrypted text
+            if (!rawBase64) return;
 
             const link = document.createElement('a');
-            link.href = currentBase64;
+            link.href = rawBase64;
             
-            // Determine extension from format
             const format = formatSelect.value;
             const ext = format === 'image/webp' ? 'webp' : 
                        format === 'image/png' ? 'png' : 'jpg';
@@ -1012,28 +1463,33 @@
             showToast('Image downloaded!');
         }
 
-        function showToast(message) {
+        function showToast(message, isError = false) {
             const toastMessage = document.getElementById('toastMessage');
             toastMessage.textContent = message;
+            toast.classList.toggle('error', isError);
             toast.classList.add('show');
             
             setTimeout(() => {
                 toast.classList.remove('show');
+                toast.classList.remove('error');
             }, 3000);
         }
 
         function resetApp() {
             currentFile = null;
             currentBase64 = '';
+            rawBase64 = '';
             
             dropzone.style.display = 'block';
             controls.classList.remove('visible');
+            encryptionSection.classList.remove('visible');
             comparison.classList.remove('visible');
             outputSection.classList.remove('visible');
             
             originalImage.src = '';
             compressedImage.src = '';
             base64Output.value = '';
+            secretKeyInput.value = '';
             
             fileInput.value = '';
             
@@ -1041,6 +1497,9 @@
             document.getElementById('originalSize').textContent = '-';
             document.getElementById('compressedDimensions').textContent = '-';
             document.getElementById('compressedSize').textContent = '-';
+            
+            // Reset encryption mode
+            setEncryptionMode('encrypt');
         }
 
         // PWA Install Prompt
@@ -1049,7 +1508,6 @@
                 e.preventDefault();
                 deferredPrompt = e;
                 
-                // Show install prompt after a delay
                 setTimeout(() => {
                     if (deferredPrompt) {
                         installPrompt.classList.add('visible');
@@ -1076,12 +1534,6 @@
         // Service Worker
         function initServiceWorker() {
             if ('serviceWorker' in navigator) {
-                // Note: For a true offline experience, the service worker needs to be
-                // registered from a separate file. This inline registration won't work
-                // due to browser security restrictions.
-                // Users who want full offline capability should extract the SW code
-                // to a separate 'sw.js' file.
-                
                 navigator.serviceWorker.ready.then((registration) => {
                     console.log('Service Worker ready:', registration.scope);
                 }).catch((error) => {
@@ -1091,8 +1543,7 @@
         }
     </script>
 
-    
-
+   
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js');
